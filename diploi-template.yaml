@@ -1,0 +1,122 @@
+diploiTemplateVersion: V1.0
+name: diploi-nextjs-todo
+description: A starter template for Next.js
+defaultName: Next.js ToDo
+
+stages:
+  - name: Development
+    identifier: development
+  - name: Staging
+    identifier: staging
+  - name: Production
+    identifier: production
+  
+contexts:
+  - name: app
+    identifier: app
+  - name: postgres
+    identifier: postgres
+
+parameterGroups:
+  - name: PostgreSQL Database
+    identifier: postgres
+    toggleable: true
+    description: Database connection info
+    defaultValue: TRUE
+    parameters:
+      - name: Host
+        identifier: POSTGRES_HOST
+        defaultValue: postgres
+        type: string
+      - name: Port
+        identifier: POSTGRES_PORT
+        defaultValue: 5432
+        type: integer
+      - name: User
+        identifier: POSTGRES_USER
+        defaultValue: postgres
+        type: string
+        contexts: label=postgres,label=app
+      - name: Password
+        identifier: POSTGRES_PASSWORD
+        defaultValue: postgres
+        type: secret
+      - name: Schema
+        identifier: POSTGRES_DB
+        defaultValue: todo
+        type: string
+  - name: Server
+    identifier: SERVER
+    parameters:
+      - name: Server count
+        identifier: SERVER_REPLICAS
+        defaultValue: 2
+        type: integer
+        stages:
+          - production
+
+environmentVariables:
+  - identifier: PROJECT_TITLE
+    defaultValue: My Todo App
+    type: string
+    contexts: label=app
+
+repositories:
+  - name: app
+    identifier: app
+
+hosts:
+  - name: App
+    identifier: app
+    urlFormat: '[label].[default-domain]'
+
+ssh:
+  - usernameFormat: '[label]'
+    contexts: label=app
+    stages:
+      - development
+  - usernameFormat: '[label]-[index]'
+    contexts: label=app
+    stages:
+      - production
+  - usernameFormat: '[label]-postgres'
+    contexts: label=postgres
+
+logs:
+  - identifier: www-log
+    name: Next.js Log
+    labelSelector: app=app
+    command: tail -n 2000 -F /var/log/www.log
+
+actions:
+  - identifier: nextjs-restart
+    name: Restart Next.js
+    labelSelector: app=app
+    command: supervisord restart www
+
+images:
+  - identifier: app
+    repository: app
+    dockerfile: Dockerfile
+    image: ghcr.io/nemesysltd/diploi-nextjs-psql-template
+    stages:
+      - development
+      - production
+      - staging
+    manualBuildStages:
+      - development
+
+storage:
+  - identifier: app
+    stages:
+      - development
+    sizeMb: 8000
+  - identifier: postgres
+    stages:
+      - production
+      - staging
+      - development
+    sizeMb: 10000
+
+status:
+  url: http://app:3000/status

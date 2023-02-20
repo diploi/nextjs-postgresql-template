@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  serviceName: postgres
+  replicas: {{ ternary 1 0 .Values.enabled }}
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:14.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5432
+              name: postgres
+          env:
+            - name: PGDATA
+              value: /postgres/data
+            {{- range .Values.parameterGroups }}
+            - name: {{ .identifier }}
+              value: {{ .value | quote }}
+            {{- end }}
+          volumeMounts:
+            - name: postgres-mount
+              mountPath: /postgres
+      volumes:
+        - name: postgres-mount
+          hostPath:
+            path: {{ .Values.storage.postgres.hostPath }}

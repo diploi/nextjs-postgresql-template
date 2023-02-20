@@ -1,0 +1,29 @@
+{
+  "name": "diploi-nextjs-postgresql-starter",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 80",
+    "prod": "next start -p 80",
+    "build": "next build",
+    "start": "if [ ${STAGE} = \"production\" ]; then next start -p 80; else next dev -p 80; fi",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@types/pg": "8.6.5",
+    "chalk": "5.0.1",
+    "next": "12.2.4",
+    "pg": "8.7.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "sql-template-strings": "2.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "18.7.1",
+    "@types/react": "18.0.17",
+    "@types/react-dom": "18.0.6",
+    "eslint": "8.21.0",
+    "eslint-config-next": "12.2.4",
+    "typescript": "4.7.4"
+  }
+}

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: disabled
+  labels:
+    app: disabled
+spec:
+  selector:
+    matchLabels:
+      app: disabled
+  serviceName: disabled
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: disabled
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: disabled
+          image: nemesys/diploi-disabled
+          ports:
+            - containerPort: 80
