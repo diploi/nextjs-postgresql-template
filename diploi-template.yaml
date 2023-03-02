@@ -10,7 +10,7 @@ stages:
     identifier: staging
   - name: Production
     identifier: production
-  
+
 contexts:
   - name: app
     identifier: app
@@ -45,15 +45,6 @@ parameterGroups:
         identifier: POSTGRES_DB
         defaultValue: todo
         type: string
-  - name: Server
-    identifier: SERVER
-    parameters:
-      - name: Server count
-        identifier: SERVER_REPLICAS
-        defaultValue: 2
-        type: integer
-        stages:
-          - production
 
 environmentVariables:
   - identifier: PROJECT_TITLE
