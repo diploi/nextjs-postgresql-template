@@ -47,8 +47,8 @@ parameterGroups:
         type: string
 
 environmentVariables:
-  - identifier: PROJECT_TITLE
-    defaultValue: My Todo App
+  - identifier: NEXT_PUBLIC_TEST
+    defaultValue: This text comes from an environment variable!
     type: string
     contexts: label=app
 

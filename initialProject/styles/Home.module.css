@@ -13,6 +13,14 @@
   text-align: center;
 }
 
+.title small {
+  display: block;
+  font-size: 14px;
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  font-weight: normal;
+  opacity: 0.5;
+}
+
 .list {
   margin: 32px 0;
   padding: 0;

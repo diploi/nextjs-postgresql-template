@@ -63,7 +63,10 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>What To Do?</h1>
+        <h1 className={styles.title}>
+          What To Do?
+          <small>{process.env.NEXT_PUBLIC_TEST}</small>
+        </h1>
 
         {isLoading && <div style={{ padding: 50 }}>Loading…</div>}
         {!isLoading && (
