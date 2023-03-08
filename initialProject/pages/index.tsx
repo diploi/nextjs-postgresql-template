@@ -72,7 +72,9 @@ const Home: NextPage = () => {
         {!isLoading && (
           <>
             <ol className={styles.list}>
-              {(data?.list || []).map((item) => <ListItem {...item} onChange={handleItemChange} onDelete={handleItemDelete} />)}
+              {(data?.list || []).map((item) => (
+                <ListItem key={item.id} {...item} onChange={handleItemChange} onDelete={handleItemDelete} />
+              ))}
             </ol>
             <button className={styles.add} disabled={isLoading || isValidating} onClick={handleItemAdd}>
               Add Item
