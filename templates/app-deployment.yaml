@@ -8,7 +8,7 @@ spec:
   selector:
     matchLabels:
       app: app
-  serviceName: app
+  #serviceName: app
   replicas: {{ ternary 1 0 .Values.enabled }}
   strategy:
     type: RollingUpdate
