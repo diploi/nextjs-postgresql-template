@@ -45,7 +45,7 @@ const getSupervisorStatus = async (name, process) => {
 
 const getWWWStatus = async () => {
   try {
-    const nextjsResponse = (await shellExec('curl http://app')).stdout;
+    const nextjsResponse = (await shellExec('curl http://localhost')).stdout;
     if (nextjsResponse && nextjsResponse.includes('__NEXT_DATA__')) {
       return {
         status: Status.GREEN,
@@ -125,3 +125,17 @@ const requestListener = async (req, res) => {
 
 const server = http.createServer(requestListener);
 server.listen(3000, '0.0.0.0');
+
+const podReadinessLoop = async () => {
+  const status = await getStatus();
+  let allOK = !status.items.find((s) => s.status !== Status.GREEN);
+  if (allOK) {
+    await shellExec('touch /tmp/pod-ready');
+  } else {
+    await shellExec('rm -f /tmp/pod-ready');
+  }
+  setTimeout(() => {
+    podReadinessLoop();
+  }, 5000 + (allOK ? 1 : 0) * 5000);
+};
+podReadinessLoop();
