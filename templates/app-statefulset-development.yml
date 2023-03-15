@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: app
+  labels:
+    app: app
+spec:
+  selector:
+    matchLabels:
+      app: app
+  serviceName: app
+  replicas: {{ ternary (ternary 1 0 (eq "development" .Values.stage)) 0 .Values.enabled }}
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      terminationGracePeriodSeconds: 10
+      imagePullSecrets:
+        - name: diploi-pull-secret
+      containers:
+        - name: app
+          image: {{ .Values.images.app }}
+          imagePullPolicy: Always
+          #command: ['sh', '-c', 'echo The app is running! && sleep 10000']
+          ports:
+            - containerPort: 80
+            - containerPort: 3000
+          readinessProbe:
+            exec:
+              command:
+              - cat
+              - /tmp/pod-ready
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          env:
+            {{- range .Values.env }}
+            {{- if contains "app" .contexts }}
+            - name: {{ .identifier }}
+              value: {{ .value | quote }}
+            {{- end }}
+            {{- end }}
+            {{- range .Values.parameterGroups }}
+            - name: {{ .identifier }}
+              value: {{ .value | quote }}
+            {{- end }}
+            - name: REPOSITORY_URL
+              value: {{ .Values.repositories.app.url }}
+            - name: REPOSITORY_BRANCH
+              value: {{ .Values.repositories.app.branch }}
+            - name: APP_PUBLIC_URL
+              value: {{ .Values.hosts.app }}
+            - name: STAGE
+              value: {{ .Values.stage }}
+          volumeMounts:
+            {{- if hasKey .Values.storage "app" }}
+            - name: app-mount
+              mountPath: /app
+            - name: bash-history
+              mountPath: /root/.bash_history
+            - name: vscode-server
+              mountPath: /root/.vscode-server
+            - name: git-config
+              mountPath: /root/.gitconfig
+            {{- end }}
+            - name: ssh-keys
+              mountPath: /etc/ssh/internal_ssh_host_rsa.pub
+              subPath: internal_ssh_host_rsa.pub
+            - name: diploi-git
+              mountPath: /etc/diploi-git
+
+      volumes:
+        {{- if hasKey .Values.storage "app" }}
+        - name: app-mount
+          hostPath:
+            path: {{ .Values.storage.app.hostPath }}/app
+        - name: bash-history
+          hostPath:
+            path: {{ .Values.storage.app.hostPath }}/root-persist/.bash_history
+            type: FileOrCreate
+        - name: vscode-server
+          hostPath:
+            path: {{ .Values.storage.app.hostPath }}/root-persist/.vscode-server
+            type: DirectoryOrCreate
+        - name: git-config
+          hostPath:
+            path: {{ .Values.storage.app.hostPath }}/root-persist/.gitconfig
+            type: FileOrCreate
+        {{- end }}
+        - name: ssh-keys
+          secret:
+            secretName: ssh-keys
+        - name: diploi-git
+          secret:
+            secretName: diploi-git
+
+
+
