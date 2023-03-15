@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: app
   labels:
@@ -10,6 +10,11 @@ spec:
       app: app
   serviceName: app
   replicas: {{ ternary 1 0 .Values.enabled }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+    maxUnavailable: 25%
+    maxSurge: 25%
   template:
     metadata:
       labels:
@@ -26,6 +31,13 @@ spec:
           ports:
             - containerPort: 80
             - containerPort: 3000
+          readinessProbe:
+            exec:
+              command:
+              - cat
+              - /tmp/pod-ready
+            initialDelaySeconds: 5
+            periodSeconds: 5
           env:
             {{- range .Values.env }}
             {{- if contains "app" .contexts }}
@@ -38,9 +50,9 @@ spec:
               value: {{ .value | quote }}
             {{- end }}
             - name: REPOSITORY_URL
-              value: {{ .Values.repositories.app.url }} 
+              value: {{ .Values.repositories.app.url }}
             - name: REPOSITORY_BRANCH
-              value: {{ .Values.repositories.app.branch }} 
+              value: {{ .Values.repositories.app.branch }}
             - name: APP_PUBLIC_URL
               value: {{ .Values.hosts.app }}
             - name: STAGE
@@ -86,6 +98,6 @@ spec:
         - name: diploi-git
           secret:
             secretName: diploi-git
-           
 
-        
+
+
