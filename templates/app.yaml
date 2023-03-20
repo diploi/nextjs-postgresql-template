@@ -21,7 +21,7 @@ spec:
   {{- else }}
   serviceName: app
   {{- end }}
-  replicas: {{ ternary (ternary 0 1 (eq "development" .Values.stage)) 0 .Values.enabled }}
+  replicas: {{ ternary 1 0 .Values.enabled }}
   template:
     metadata:
       labels:
