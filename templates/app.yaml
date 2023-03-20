@@ -1,5 +1,9 @@
 apiVersion: apps/v1
+{{- if eq .Values.stage "development"}}
+kind: StatefulSet
+{{- else }}
 kind: Deployment
+{{- end }}
 metadata:
   name: app
   labels:
@@ -8,7 +12,9 @@ spec:
   selector:
     matchLabels:
       app: app
-  #serviceName: app
+  {{- if ne .Values.stage "development"}}
+  serviceName: app
+  {{- end }}
   replicas: {{ ternary (ternary 0 1 (eq "development" .Values.stage)) 0 .Values.enabled }}
   strategy:
     type: RollingUpdate
@@ -73,7 +79,6 @@ spec:
               subPath: internal_ssh_host_rsa.pub
             - name: diploi-git
               mountPath: /etc/diploi-git
-
       volumes:
         {{- if hasKey .Values.storage "app" }}
         - name: app-mount
