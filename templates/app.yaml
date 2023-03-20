@@ -13,6 +13,7 @@ spec:
     matchLabels:
       app: app
   {{- if eq .Values.stage "development"}}
+  serviceName: app
   strategy:
     type: RollingUpdate
     rollingUpdate:
