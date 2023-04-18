@@ -1,5 +1,5 @@
 {{- range .Values.env }}
-{{- if and (contains .value "postgres") (eq .identifier "PARAMETER_GROUPS_ENABLED") }}
+{{- if and (contains "postgres" .contexts) (and (contains "postgres" .value) (eq .identifier "PARAMETER_GROUPS_ENABLED")) }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
