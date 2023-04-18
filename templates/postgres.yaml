@@ -1,4 +1,4 @@
-{{ if .Values.enabled }}
+{{ if .Values.env.PARAMETER_GROUPS_ENABLED | contains "postgres" }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -8,7 +8,7 @@ spec:
     matchLabels:
       app: postgres
   serviceName: postgres
-  replicas: 1
+  replicas: {{ ternary .Values.enabled 1 0 }}
   template:
     metadata:
       labels:
