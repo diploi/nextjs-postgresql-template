@@ -9,7 +9,7 @@ spec:
     matchLabels:
       app: postgres
   serviceName: postgres
-  replicas: {{ ternary $.Values.enabled 1 0 }}
+  replicas: {{ ternary 1 0 $.Values.enabled }}
   template:
     metadata:
       labels:
