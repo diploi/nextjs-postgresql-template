@@ -9,7 +9,7 @@ spec:
     matchLabels:
       app: postgres
   serviceName: postgres
-  replicas: {{ ternary .Values.enabled 1 0 }}
+  replicas: {{ ternary $.Values.enabled 1 0 }}
   template:
     metadata:
       labels:
@@ -25,13 +25,13 @@ spec:
           env:
             - name: PGDATA
               value: /postgres/data
-            {{- range .Values.env }}
+            {{- range $.Values.env }}
             {{- if contains "postgres" .contexts }}
             - name: {{ .identifier }}
               value: {{ .value | quote }}
             {{- end }}
             {{- end }}
-            {{- range .Values.parameterGroups }}
+            {{- range $.Values.parameterGroups }}
             - name: {{ .identifier }}
               value: {{ .value | quote }}
             {{- end }}
@@ -41,6 +41,6 @@ spec:
       volumes:
         - name: postgres-mount
           hostPath:
-            path: {{ .Values.storage.postgres.hostPath }}
+            path: {{ $.Values.storage.postgres.hostPath }}
 {{ end }}
 {{ end }}
