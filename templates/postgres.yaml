@@ -1,4 +1,5 @@
-{{ if .Values.env.PARAMETER_GROUPS_ENABLED | contains "postgres" }}
+{{- range .Values.env }}
+{{- if and (contains .value "postgres") (eq .identifier "PARAMETER_GROUPS_ENABLED") }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -41,4 +42,5 @@ spec:
         - name: postgres-mount
           hostPath:
             path: {{ .Values.storage.postgres.hostPath }}
+{{ end }}
 {{ end }}
