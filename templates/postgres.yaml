@@ -1,4 +1,4 @@
-{{ if .Values.parameterGroupsEnabled | contains "postgres" }}
+{{ if (join "," .Values.parameterGroupsEnabled) | contains "postgres" }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
