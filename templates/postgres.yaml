@@ -1,4 +1,4 @@
-{{- if eq .Values.parameterGroupsEnabled.postgres true }}
+{{- if eq .Values.parameterGroupsEnabled.postgres 1 }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
