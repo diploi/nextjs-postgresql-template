@@ -1,4 +1,4 @@
-{{ if .Values.parameterGroupsEnabled | contains "postgres" }}
+{{ if (join "," .Values.parameterGroupsEnabled) | contains "postgres" }}
 apiVersion: v1
 kind: Service
 metadata:
