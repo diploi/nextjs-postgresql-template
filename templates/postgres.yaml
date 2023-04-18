@@ -23,6 +23,12 @@ spec:
           env:
             - name: PGDATA
               value: /postgres/data
+            {{- range .Values.env }}
+            {{- if contains "postgres" .contexts }}
+            - name: {{ .identifier }}
+              value: {{ .value | quote }}
+            {{- end }}
+            {{- end }}
             {{- range .Values.parameterGroups }}
             - name: {{ .identifier }}
               value: {{ .value | quote }}
