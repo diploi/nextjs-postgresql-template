@@ -112,8 +112,12 @@ const getStatus = async () => {
 
   const status = {
     diploiStatusVersion: 1,
-    items: [wwwStatus, await getPostgresStatus()],
+    items: [wwwStatus],
   };
+  const hasPostgres = process.env.PARAMETER_GROUPS_ENABLED.includes('postgres');
+  if (hasPostgres) {
+    status.items.push(await getPostgresStatus());
+  }
 
   return status;
 };
