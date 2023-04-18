@@ -1,4 +1,3 @@
-{{ if (join "," .Values.parameterGroupsEnabled) | contains "postgres" }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -35,4 +34,3 @@ spec:
         - name: postgres-mount
           hostPath:
             path: {{ .Values.storage.postgres.hostPath }}
-{{ end }}

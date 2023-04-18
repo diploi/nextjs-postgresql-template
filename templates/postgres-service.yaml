@@ -1,4 +1,3 @@
-{{ if (join "," .Values.parameterGroupsEnabled) | contains "postgres" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -10,4 +9,3 @@ spec:
       port: 5432
   selector:
     app: postgres
-{{ end }}

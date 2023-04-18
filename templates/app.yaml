@@ -46,8 +46,6 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 5
           env:
-            - name: parameterGroupsEnabled
-              value: {{ join "," .Values.parameterGroupsEnabled }}
             {{- range .Values.env }}
             {{- if contains "app" .contexts }}
             - name: {{ .identifier }}
