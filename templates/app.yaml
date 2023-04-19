@@ -46,7 +46,6 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 5
           env:
-            env:
             {{ range $key, $val := .Values.parameterGroupsEnabled }}
             - name: parameter_group_{{ $key }}_enabled
               value: {{ ternary 1 0 $val }}
