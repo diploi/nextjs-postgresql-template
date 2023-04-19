@@ -74,15 +74,15 @@ spec:
           {{- if eq .Values.stage "development"}}
           resources:
             requests:
-              memory: 2Gi
+              memory: 1500Mi
             limits:
-              memory: 3Gi
+              memory: 2000Mi
           {{- else }}
           resources:
             requests:
               memory: 500Mi
             limits:
-              memory: 1Gi
+              memory: 1000Mi
           {{- end }}
           env:
             {{ range $key, $val := .Values.parameterGroupsEnabled }}
