@@ -27,6 +27,9 @@ spec:
       labels:
         app: app
     spec:
+      podPriority:
+        enabled: true
+        priorityClassName: {{ .Values.stage }}
       terminationGracePeriodSeconds: 10
       imagePullSecrets:
         - name: diploi-pull-secret
@@ -34,17 +37,57 @@ spec:
         - name: app
           image: {{ .Values.images.app }}
           imagePullPolicy: Always
-          #command: ['sh', '-c', 'echo The app is running! && sleep 10000']
           ports:
             - containerPort: 80
             - containerPort: 3000
-          readinessProbe:
+          startupProbe:
+            exec:
+              command:
+              - cat
+              - /tmp/pod-ready
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            timeoutSeconds: 1
+            successThreshold: 2
+            failureThreshold: 10
+            #terminationGracePeriodSeconds: 10 #inherited from pod level
+          livenessProbe:
             exec:
               command:
               - cat
               - /tmp/pod-ready
             initialDelaySeconds: 5
             periodSeconds: 5
+            timeoutSeconds: 1
+            successThreshold: 2
+            failureThreshold: 2
+            #terminationGracePeriodSeconds: 10 #inherited from pod level
+          readinessProbe:
+            exec:
+              command:
+              - cat
+              - /tmp/pod-ready
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            timeoutSeconds: 1
+            successThreshold: 2
+            failureThreshold: 2
+            #terminationGracePeriodSeconds: 10 #inherited from pod level
+          {{- if eq .Values.stage "development"}}
+          resources:
+            requests:
+              memory: 2Gi
+            limits:
+              cpuShares: 200
+              memory: 3Gi
+          {{- else }}
+          resources:
+            requests:
+              memory: 500Mi
+            limits:
+              cpuShares: 500
+              memory: 1Gi
+          {{- end }}
           env:
             {{ range $key, $val := .Values.parameterGroupsEnabled }}
             {{ if $val }}
