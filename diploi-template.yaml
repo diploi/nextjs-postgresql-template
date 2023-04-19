@@ -70,9 +70,10 @@ ssh:
     contexts: label=app
     stages:
       - production
-  - usernameFormat: '[label]-postgres'
-    contexts: label=postgres
-
+  - usernameFormat: '[label]'
+    contexts: label=app
+    stages:
+      - staging
 logs:
   - identifier: www-log
     name: Next.js Log
