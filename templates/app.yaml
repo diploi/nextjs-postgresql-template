@@ -47,8 +47,10 @@ spec:
             periodSeconds: 5
           env:
             {{ range $key, $val := .Values.parameterGroupsEnabled }}
+            {{ if $val }}
             - name: parameter_group_{{ $key }}_enabled
-              value: {{ ternary 1 0 $val }}
+              value: "1"
+            {{ end }}
             {{ end }}
             {{- range .Values.env }}
             {{- if contains "app" .contexts }}
