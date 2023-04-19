@@ -27,9 +27,6 @@ spec:
       labels:
         app: app
     spec:
-      podPriority:
-        enabled: true
-        priorityClassName: {{ .Values.stage }}
       terminationGracePeriodSeconds: 10
       imagePullSecrets:
         - name: diploi-pull-secret
@@ -73,6 +70,7 @@ spec:
             successThreshold: 2
             failureThreshold: 2
             #terminationGracePeriodSeconds: 10 #inherited from pod level
+          priorityClassName: {{ .Values.stage }}
           {{- if eq .Values.stage "development"}}
           resources:
             requests:
