@@ -30,7 +30,8 @@ spec:
       terminationGracePeriodSeconds: 10
       imagePullSecrets:
         - name: diploi-pull-secret
-      priorityClassName: {{ .Values.stage }}
+      #priorityClassName: {{ .Values.stage }} # disabled temporarily as old cores doesn't support this
+      #fix this by manualy kubectl apply -f [priorityclassesfile] in core code!
       containers:
         - name: app
           image: {{ .Values.images.app }}
