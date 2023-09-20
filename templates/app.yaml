@@ -39,39 +39,39 @@ spec:
           ports:
             - containerPort: 80
             - containerPort: 3000
-          startupProbe:
-            exec:
-              command:
-              - cat
-              - /tmp/pod-ready
-            initialDelaySeconds: 30
-            periodSeconds: 5
-            timeoutSeconds: 1
-            successThreshold: 1
-            failureThreshold: 10
-            #terminationGracePeriodSeconds: 10 #inherited from pod level
-          livenessProbe:
-            exec:
-              command:
-              - cat
-              - /tmp/pod-ready
-            initialDelaySeconds: 5
-            periodSeconds: 5
-            timeoutSeconds: 1
-            successThreshold: 1
-            failureThreshold: 2
-            #terminationGracePeriodSeconds: 10 #inherited from pod level
-          readinessProbe:
-            exec:
-              command:
-              - cat
-              - /tmp/pod-ready
-            initialDelaySeconds: 20
-            periodSeconds: 5
-            timeoutSeconds: 1
-            successThreshold: 1
-            failureThreshold: 2
-            #terminationGracePeriodSeconds: 10 #inherited from pod level
+          #startupProbe:
+          #  exec:
+          #    command:
+          #    - cat
+          #    - /tmp/pod-ready
+          #  initialDelaySeconds: 30
+          #  periodSeconds: 5
+          #  timeoutSeconds: 1
+          #  successThreshold: 1
+          #  failureThreshold: 10
+          #  #terminationGracePeriodSeconds: 10 #inherited from pod level
+          #livenessProbe:
+          #  exec:
+          #    command:
+          #    - cat
+          #    - /tmp/pod-ready
+          #  initialDelaySeconds: 5
+          #  periodSeconds: 5
+          #  timeoutSeconds: 1
+          #  successThreshold: 1
+          #  failureThreshold: 2
+          #  #terminationGracePeriodSeconds: 10 #inherited from pod level
+          #readinessProbe:
+          #  exec:
+          #    command:
+          #    - cat
+          #    - /tmp/pod-ready
+          #  initialDelaySeconds: 20
+          #  periodSeconds: 5
+          #  timeoutSeconds: 1
+          #  successThreshold: 1
+          #  failureThreshold: 2
+          #  #terminationGracePeriodSeconds: 10 #inherited from pod level
           {{- if eq .Values.stage "development"}}
           resources:
             requests:
@@ -120,12 +120,8 @@ spec:
             {{- if hasKey .Values.storage "app" }}
             - name: app-mount
               mountPath: /app
-            - name: bash-history
-              mountPath: /root/.bash_history
-            - name: vscode-server
-              mountPath: /root/.vscode-server
-            - name: git-config
-              mountPath: /root/.gitconfig
+            - name: root-mount
+              mountPath: /root
             {{- end }}
             - name: ssh-keys
               mountPath: /etc/ssh/internal_ssh_host_rsa.pub
@@ -137,18 +133,9 @@ spec:
         - name: app-mount
           hostPath:
             path: {{ .Values.storage.app.hostPath }}/app
-        - name: bash-history
+        - name: root-mount
           hostPath:
-            path: {{ .Values.storage.app.hostPath }}/root-persist/.bash_history
-            type: FileOrCreate
-        - name: vscode-server
-          hostPath:
-            path: {{ .Values.storage.app.hostPath }}/root-persist/.vscode-server
-            type: DirectoryOrCreate
-        - name: git-config
-          hostPath:
-            path: {{ .Values.storage.app.hostPath }}/root-persist/.gitconfig
-            type: FileOrCreate
+            path: {{ .Values.storage.app.hostPath }}/root
         {{- end }}
         - name: ssh-keys
           secret:

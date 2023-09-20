@@ -9,4 +9,4 @@ spec:
     - port: 3000
       name: status
   selector:
-    app: {{ ternary "app" "disabled" .Values.enabled }}
+    app: app

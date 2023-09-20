@@ -91,6 +91,7 @@ images:
     repository: app
     dockerfile: Dockerfile
     image: ghcr.io/nemesysltd/diploi-nextjs-psql-template
+    initialProjectImage: ghcr.io/diploi/nextjs-postgresql-template-arm64-initial-project
     stages:
       - development
       - production
@@ -102,13 +103,13 @@ storage:
   - identifier: app
     stages:
       - development
-    sizeMb: 8000
+    sizeMiB: 6144
   - identifier: postgres
     stages:
       - production
       - staging
       - development
-    sizeMb: 10000
+    sizeMiB: 4096
 
 status:
   url: http://app:3000/status

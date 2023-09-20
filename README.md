@@ -1,4 +1,4 @@
-# Diploi Next.js ToDo template
+# Diploi Next.js Arm64 ToDo template
 
 A simple starter ToDo app template implemented with Next.js & React.
 Includes an optional PostgreSQL database.

@@ -1,4 +1,4 @@
-name: DiploiTemplateBuild
+name: DiploiInitialProjectBuild
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ${{ github.repository }}-initial-project
 
 jobs:
   build:
@@ -42,6 +42,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
+          file: InitialProjectDockerfile
           platforms: linux/arm64
           pull: true
           push: ${{ github.event_name != 'pull_request' }}

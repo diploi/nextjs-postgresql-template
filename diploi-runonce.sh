@@ -1,10 +1,18 @@
 #!/bin/sh
 
-# Perform tasks at controller pod startup
-echo "Runonce started";
+progress() {
+  current_date=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+  local action="$1"
+  echo "🟩 $current_date $action"
+}
 
-# Insert accepted ssh key(s)
-cat /etc/ssh/internal_ssh_host_rsa.pub >> /root/.ssh/authorized_keys;
+# Perform tasks at controller pod startup
+progress "Runonce started";
+
+# Set accepted ssh key(s)
+mkdir -p /root/.ssh;
+chmod 0700 /root/.ssh;
+cat /etc/ssh/internal_ssh_host_rsa.pub > /root/.ssh/authorized_keys;
 
 cd /app;
 
@@ -12,12 +20,16 @@ cd /app;
 # Intialize persistant storage
 if [ ! "$(ls -A /app)" ]; then
 
-  echo "Empty /app, assuming development instance setup was intended"
-  #tar zxf /var/lib/diploi-app.tar.gz  -C /
-  mkdir -p /root-persist/.vscode-server;
-  touch /root-persist/.bash_history;
-  touch /root-persist/.gitconfig;
+  echo "Empty /app, assuming development instance setup was intended";
 
+  # Make /app default folder  
+  echo "cd /app;" >> /root/.bashrc
+
+  # Generate root ssh key
+  ssh-keygen -A;
+
+  progress "Pulling code";
+  
   git init;
   git config credential.helper '!diploi-credential-helper';
   git remote add --fetch origin $REPOSITORY_URL;
@@ -44,6 +56,7 @@ if [ ! "$(ls -A /app)" ]; then
 }
 EOL
 
+  progress "Installing";
   npm install;
 
 fi
@@ -54,9 +67,13 @@ update-ca-certificates
 # Make all special env variables available in ssh also (ssh will wipe out env by default)
 env >> /etc/environment
 
+# Seed database
+# NOTE! Not ideal, this assumes postgres starts faster than app container
+node /app/lib/seedDatabase.js
+
 # Now that everything is initialized, start all services
 supervisorctl start www
 
-echo "Runonce done";
+progress "Runonce done";
 
 exit 0;
