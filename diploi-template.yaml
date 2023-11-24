@@ -47,8 +47,8 @@ parameterGroups:
         type: string
 
 environmentVariables:
-  - identifier: NEXT_PUBLIC_TEST
-    defaultValue: This text comes from an environment variable!
+  - identifier: SUBTITLE
+    defaultValue: This text comes from an environment variable
     type: string
     contexts: label=app
 
