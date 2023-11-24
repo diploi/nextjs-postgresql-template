@@ -98,12 +98,6 @@ spec:
               value: {{ .value | quote }}
             {{- end }}
             {{- end }}
-            {{- range .Values.env }}
-            {{- if contains "app" .contexts }}
-            - name: {{ .identifier }}
-              value: {{ .value | quote }}
-            {{- end }}
-            {{- end }}
             {{- range .Values.parameterGroups }}
             - name: {{ .identifier }}
               value: {{ .value | quote }}
