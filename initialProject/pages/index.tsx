@@ -21,6 +21,7 @@ const post = (url: string, data: any) => fetch(url, {
 
 const Home: NextPage = () => {
   const { data, mutate, isLoading, isValidating } = useSWR<ListResponse>('/api/list', get);
+  const { data: subtitle } = useSWR<string>('/api/subtitle', get);
 
   const handleItemAdd = async () => {
     // Tell API to add a new line
@@ -65,7 +66,7 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <h1 className={styles.title}>
           What To Do?
-          <small>{process.env.NEXT_PUBLIC_TEST}</small>
+          <small>{subtitle || '...'}</small>
         </h1>
 
         {isLoading && <div style={{ padding: 50 }}>Loading…</div>}
