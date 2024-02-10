@@ -55,6 +55,7 @@ environmentVariables:
 repositories:
   - name: app
     identifier: app
+    initialProjectRepositoryUrl: github.com/diploi/nextjs-postgresql-template-demo
 
 hosts:
   - name: App
