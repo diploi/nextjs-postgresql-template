@@ -1,4 +1,4 @@
-FROM ghcr.io/diploi/nextjs-postgresql-template-arm64
+FROM ghcr.io/diploi/nextjs-postgresql-template
 
 # Install application code
 WORKDIR /app
