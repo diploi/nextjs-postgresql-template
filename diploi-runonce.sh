@@ -38,6 +38,7 @@ if [ ! "$(ls -A /app)" ]; then
   else
     git checkout -f -q $REPOSITORY_TAG;
     git checkout -b main
+    git branch --set-upstream-to=origin/main main
   fi
   git remote set-url origin "$REPOSITORY_URL";
   git config --unset credential.helper;
