@@ -92,7 +92,7 @@ images:
     repository: app
     dockerfile: Dockerfile
     image: ghcr.io/nemesysltd/diploi-nextjs-psql-template
-    initialProjectImage: ghcr.io/diploi/nextjs-postgresql-template-arm64-initial-project
+    initialProjectImage: ghcr.io/diploi/nextjs-postgresql-template-initial-project
     stages:
       - development
       - production
