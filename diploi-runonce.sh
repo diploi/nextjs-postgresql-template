@@ -33,7 +33,12 @@ if [ ! "$(ls -A /app)" ]; then
   git init;
   git config credential.helper '!diploi-credential-helper';
   git remote add --fetch origin $REPOSITORY_URL;
-  git checkout -f $REPOSITORY_BRANCH;
+  if [ -z "$REPOSITORY_TAG" ]; then
+    git checkout -f $REPOSITORY_BRANCH;
+  else
+    git checkout -f -q $REPOSITORY_TAG;
+    git checkout -b main
+  fi
   git remote set-url origin "$REPOSITORY_URL";
   git config --unset credential.helper;
   
