@@ -62,6 +62,10 @@ hosts:
     identifier: app
     urlFormat: '[label].[default-domain]'
 
+editors:
+  - name: App
+    identifier: app
+
 ssh:
   - usernameFormat: '[label]'
     contexts: label=app
