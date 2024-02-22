@@ -79,6 +79,7 @@ node /app/lib/seedDatabase.js
 
 # Now that everything is initialized, start all services
 supervisorctl start www
+supervisorctl start code-server
 
 progress "Runonce done";
 
