@@ -32,7 +32,7 @@ RUN ln -s /etc/diploi-git/gitconfig /etc/gitconfig
 COPY diploi-credential-helper /usr/local/bin
 
 # Install code server
-curl -fsSL https://code-server.dev/install.sh | sh
+RUN curl -fsSL https://code-server.dev/install.sh | sh
 
 # Init and run supervisor
 COPY diploi-runonce.sh /usr/local/bin/diploi-runonce.sh
