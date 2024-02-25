@@ -64,8 +64,10 @@ hosts:
 
 editors:
   - name: App
-    identifier: app
-
+    service: app
+    port: 3001
+    stages:
+      - development
 ssh:
   - usernameFormat: '[label]'
     contexts: label=app

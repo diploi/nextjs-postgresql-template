@@ -8,7 +8,6 @@ spec:
   tls:
     - hosts:
         - {{ .Values.hosts.app }}
-        - {{ .Values.editors.app }}
       secretName: tls-secret
   rules:
     - host: {{ .Values.hosts.app }}
@@ -21,13 +20,3 @@ spec:
                 name: app
                 port: 
                   number: 80
-    - host: {{ .Values.editors.app }}
-      http:
-        paths:
-          - path: '/'
-            pathType: Prefix
-            backend:
-              service:
-                name: app
-                port: 
-                  number: 3001
