@@ -45,6 +45,7 @@ if [ ! "$(ls -A /app)" ]; then
   
   # Configure the SQLTools VSCode extension
   # TODO: How to update these if env changes?
+  cp /usr/local/etc/diploi-vscode-settings.json /root/.local/share/code-server/User/settings.json
   cat > /app/.vscode/settings.json << EOL
 {
   "sqltools.connections": [
@@ -61,6 +62,8 @@ if [ ! "$(ls -A /app)" ]; then
   ]
 }
 EOL
+
+  
 
   progress "Installing";
   npm install;
