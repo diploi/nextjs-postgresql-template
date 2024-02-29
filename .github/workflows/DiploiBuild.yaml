@@ -14,7 +14,7 @@ env:
 
 jobs:
 
-  template-build:
+  TemplateBuild:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -50,8 +50,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
   
-  initial-project-build:
-    needs: template-build
+  InitialProjectBuild:
+    needs: TemplateBuild
     runs-on: ubuntu-latest
     permissions:
       contents: read
