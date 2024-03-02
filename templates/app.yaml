@@ -39,6 +39,7 @@ spec:
           ports:
             - containerPort: 80
             - containerPort: 3000
+            - containerPort: 3001
           #startupProbe:
           #  exec:
           #    command:

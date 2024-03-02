@@ -31,6 +31,10 @@ RUN echo "LC_ALL=en_US.UTF-8" >> /etc/environment && \
 RUN ln -s /etc/diploi-git/gitconfig /etc/gitconfig
 COPY diploi-credential-helper /usr/local/bin
 
+# Install code server
+RUN curl -fsSL https://code-server.dev/install.sh | sh
+COPY diploi-vscode-settings.json /usr/local/etc/diploi-vscode-settings.json
+
 # Init and run supervisor
 COPY diploi-runonce.sh /usr/local/bin/diploi-runonce.sh
 COPY supervisord.conf /etc/supervisord.conf
