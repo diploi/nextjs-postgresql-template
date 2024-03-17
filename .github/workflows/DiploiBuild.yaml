@@ -11,8 +11,39 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   INITIAL_PROJECT_IMAGE_NAME: ${{ github.repository }}-initial-project
+  DEMO_TARGET_REPOSITORY: 'https://x-access-token:${{ secrets.DEMO_REPOSITORY_PAT }}@github.com/${{ github.repository }}-demo.git'
+  DEMO_TAG_NAME: '${GITHUB_REF#refs/tags/}'
 
 jobs:
+
+  DemoSync: 
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v2
+
+      - name: Sync initialProject folder and push tag
+        run: |
+          # Configure git
+          git config --global user.email "demo-sync@diploi.com"
+          git config --global user.name "Demo Sync"
+          
+          # Clone the target repository using HTTPS and PAT for authentication 
+          git clone ${{ env.DEMO_TARGET_REPOSITORY }} temp_repo
+          cd temp_repo
+          
+          # Sync the folder
+          rsync -av --delete --exclude='.git/' ../initialProject/ ./
+          
+          # Commit and push the changes, if there are any
+          git add .
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Commit sync" && git push origin main)
+          
+          # Tag and push the tag
+          git tag ${{ env.DEMO_TAG_NAME }}
+          git push origin --tags
+
 
   TemplateBuild:
     runs-on: ubuntu-latest
