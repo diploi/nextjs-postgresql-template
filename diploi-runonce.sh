@@ -30,7 +30,7 @@ if [ ! "$(ls -A /app)" ]; then
 
   progress "Pulling code";
   
-  git init;
+  git init --initial-branch=main
   git config credential.helper '!diploi-credential-helper';
   git remote add --fetch origin $REPOSITORY_URL;
   if [ -z "$REPOSITORY_TAG" ]; then
@@ -43,10 +43,10 @@ if [ ! "$(ls -A /app)" ]; then
   git remote set-url origin "$REPOSITORY_URL";
   git config --unset credential.helper;
   
-  # Configure the SQLTools VSCode extension
-  # TODO: How to update these if env changes?
+  # Configure VSCode
   mkdir -p /root/.local/share/code-server/User
   cp /usr/local/etc/diploi-vscode-settings.json /root/.local/share/code-server/User/settings.json
+  # TODO: How to update these if env changes?
   cat > /app/.vscode/settings.json << EOL
 {
   "sqltools.connections": [
