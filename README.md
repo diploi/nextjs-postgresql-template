@@ -25,3 +25,7 @@ Available with a VSCode extension ([SQLTools](https://marketplace.visualstudio.c
 ```bash
 su postgres -c 'psql'
 ```
+
+---
+
+[<img src="https://diploi.com/launch-template-button.svg">](https://diploi.com/launch/next)
