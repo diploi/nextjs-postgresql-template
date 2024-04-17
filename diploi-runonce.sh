@@ -29,10 +29,9 @@ if [ ! "$(ls -A /app)" ]; then
   ssh-keygen -A;
 
   if [ "$REPOSITORY_URL" = "https://github.com/diploi/nextjs-postgresql-template-demo.git" ]; then
-    # Using gzipped initial files (and node modules)
+    # Using quick launch cached initial files
     progress "Using quick launch /app";
-    mv /app-quick-launch/* /app
-    mv /app-quick-launch/.* /app
+    find /app-quick-launch/ -mindepth 1 -maxdepth 1 -exec mv -t /app -- {} +
     rmdir /app-quick-launch
   else
     progress "Pulling code";

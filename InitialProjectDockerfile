@@ -5,10 +5,8 @@ WORKDIR /app
 COPY initialProject .
 
 # Create production build
-RUN npm install
-RUN npm run build
+RUN npm install && npm run build
 
-# Create archive for quick launch (86M!, so not very smart)
+# For quick launch (86M!, so not ideal)
 RUN git clone https://github.com/diploi/nextjs-postgresql-template-demo.git /app-quick-launch \
-  && cd /app-quick-launch \
   && npm install --prefix /app-quick-launch
