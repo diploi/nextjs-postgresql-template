@@ -31,7 +31,9 @@ if [ ! "$(ls -A /app)" ]; then
   if [ "$REPOSITORY_URL" = "https://github.com/diploi/nextjs-postgresql-template-demo.git" ]; then
     # Using gzipped initial files (and node modules)
     progress "Using quick launch /app";
-    tar -xzpf /usr/local/app-quick-launch.tar.gz -C /app --strip-components=1
+    mv /app-quick-launch/* /app
+    mv /app-quick-launch/.* /app
+    rmdir /app-quick-launch
   else
     progress "Pulling code";
     git init --initial-branch=main
