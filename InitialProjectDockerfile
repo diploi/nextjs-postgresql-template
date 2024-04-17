@@ -4,5 +4,13 @@ FROM ghcr.io/diploi/nextjs-postgresql-template
 WORKDIR /app
 COPY initialProject .
 
+# Create production build
 RUN npm install
 RUN npm run build
+
+# Create archive for quick launch (86M!, so not very smart)
+RUN git clone https://github.com/diploi/nextjs-postgresql-template-demo.git /app-quick-launch \
+  && cd /app-quick-launch \
+  && npm install --prefix /app-quick-launch \
+  && tar -czpf /usr/local/app-quick-launch.tar.gz /app-quick-launch \
+  && rm -rf /app-quick-launch

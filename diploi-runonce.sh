@@ -28,21 +28,29 @@ if [ ! "$(ls -A /app)" ]; then
   # Generate root ssh key
   ssh-keygen -A;
 
-  progress "Pulling code";
-  
-  git init --initial-branch=main
-  git config credential.helper '!diploi-credential-helper';
-  git remote add --fetch origin $REPOSITORY_URL;
-  if [ -z "$REPOSITORY_TAG" ]; then
-    git checkout -f $REPOSITORY_BRANCH;
+  if [ "$REPOSITORY_URL" = "https://github.com/diploi/nextjs-postgresql-template-demo.git" ]; then
+    # Using gzipped initial files (and node modules)
+    progress "Using quick launch /app";
+    tar -xzpf /usr/local/app-quick-launch.tar.gz -C /app --strip-components=1
   else
-    git checkout -f -q $REPOSITORY_TAG;
-    git checkout -b main
-    git branch --set-upstream-to=origin/main main
+    progress "Pulling code";
+    git init --initial-branch=main
+    git config credential.helper '!diploi-credential-helper';
+    git remote add --fetch origin $REPOSITORY_URL;
+    if [ -z "$REPOSITORY_TAG" ]; then
+      git checkout -f $REPOSITORY_BRANCH;
+    else
+      git checkout -f -q $REPOSITORY_TAG;
+      git checkout -b main
+      git branch --set-upstream-to=origin/main main
+    fi
+    git remote set-url origin "$REPOSITORY_URL";
+    git config --unset credential.helper;
+
+    progress "Installing";
+    npm install;
   fi
-  git remote set-url origin "$REPOSITORY_URL";
-  git config --unset credential.helper;
-  
+
   # Configure VSCode
   mkdir -p /root/.local/share/code-server/User
   cp /usr/local/etc/diploi-vscode-settings.json /root/.local/share/code-server/User/settings.json
@@ -63,11 +71,7 @@ if [ ! "$(ls -A /app)" ]; then
   ]
 }
 EOL
-
   
-
-  progress "Installing";
-  npm install;
 
 fi
 
@@ -77,13 +81,15 @@ update-ca-certificates
 # Make all special env variables available in ssh also (ssh will wipe out env by default)
 env >> /etc/environment
 
-# Seed database
-# NOTE! Not ideal, this assumes postgres starts faster than app container
-node /app/lib/seedDatabase.js
-
 # Now that everything is initialized, start all services
+progress "Starting services";
 supervisorctl start www
 supervisorctl start code-server
+
+# Seed database
+# NOTE! Not ideal, this assumes postgres starts faster than app container
+progress "Seed database";
+node /app/lib/seedDatabase.js
 
 progress "Runonce done";
 
