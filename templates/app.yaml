@@ -73,19 +73,6 @@ spec:
           #  successThreshold: 1
           #  failureThreshold: 2
           #  #terminationGracePeriodSeconds: 10 #inherited from pod level
-          {{- if eq .Values.stage "development"}}
-          resources:
-            requests:
-              memory: 1500Mi
-            limits:
-              memory: 2000Mi
-          {{- else }}
-          resources:
-            requests:
-              memory: 500Mi
-            limits:
-              memory: 1000Mi
-          {{- end }}
           env:
             {{ range $key, $val := .Values.parameterGroupsEnabled }}
             {{ if $val }}
